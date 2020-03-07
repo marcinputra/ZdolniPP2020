@@ -45,7 +45,7 @@ TCHAR szClassName[] = _T("CodeBlocksWindowsApp");
 
 
 
-HWND czarny, czerwony, zielony, niebieski, prostokat, linia; /* dodawanie kontroliki uchwytu dla przycisku */
+
 
 HWND hText;
 
@@ -56,6 +56,8 @@ LPSTR bufor;
 DWORD size;
 
 HPEN kolorpisaka;
+
+HWND czarny, czerwony, zielony, niebieski, prostokat, linia, krzywa;
 
 int x, y, lastx, lasty;
 
@@ -142,7 +144,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
         CW_USEDEFAULT,                      /* where the window ends up on the screen */
 
-        544,                                /* The programs width */
+        565,                                /* The programs width */
 
         375,                                /* and height in pixels */
 
@@ -278,6 +280,25 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
         hThisInstance,
 
         NULL);
+    krzywa = CreateWindowEx(
+
+        0,
+
+        _T("BUTTON"),
+
+        _T("KRZYWA"),
+
+        WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+
+        10, 35, 80, 20,
+
+        hwnd,
+
+        NULL,
+
+        hThisInstance,
+
+        NULL);
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     /*OBECNY PROGRESS!!!!!!*/
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -371,7 +392,8 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
     /*    EndPaint(hwnd, &ps);
     }*/
 
-int tool = 0;
+int tool = 0;  //zmieniany po wcisnieciu przycisku, determinuje typ rysowanego obiektu
+//dla 0 krzywe, dla 1 prostokaty, dla 2 linia prosta
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 {
@@ -455,6 +477,10 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0xAA0000);
             //SelectObject(hdc, kolorpisaka);
         }
+        if (HWND(lParam) == krzywa && HIWORD(wParam) == BN_CLICKED)
+        {
+            tool = 0;
+        }
         if (HWND(lParam) == prostokat && HIWORD(wParam) == BN_CLICKED)
         {
             tool = 1;
@@ -468,6 +494,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             //kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0xAA0000);
             //SelectObject(hdc, kolorpisaka);
         }
+        
         ////
 
 
