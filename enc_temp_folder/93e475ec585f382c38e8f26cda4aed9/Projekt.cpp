@@ -1,13 +1,19 @@
 ﻿//﻿#if defined(UNICODE) && !defined(_UNICODE)
+
 #define _UNICODE
+
 //#elif defined(_UNICODE) && !defined(UNICODE)
+
 #define UNICODE
+
 //#endif
 
-// projekt zdolni2020
+
 
 #include <tchar.h>
+
 #include <string>
+
 #include <windows.h>
 
 //#include "resource.h"
