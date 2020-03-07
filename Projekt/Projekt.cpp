@@ -1,15 +1,20 @@
-﻿//﻿#if defined(UNICODE) && !defined(_UNICODE)
+﻿#if defined(UNICODE) && !defined(_UNICODE)
+
 #define _UNICODE
-//#elif defined(_UNICODE) && !defined(UNICODE)
+
+#elif defined(_UNICODE) && !defined(UNICODE)
+
 #define UNICODE
-//#endif
+
+#endif
 
 // projekt zdolni2020
 
 #include <tchar.h>
 #include <string>
 #include <windows.h>
-
+#include "Projekt.h"
+//#include <rysowanie.h>
 //#include "resource.h"
 // #include "menu.rc"
 
@@ -329,26 +334,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
 }
 
-void line(HDC _hdc, int x1, int y1, int x2, int y2, HPEN kolor)//This function draws line by the given four coordinates.
-{
-    SelectObject(_hdc, kolor);
-    MoveToEx(_hdc, x1, y1, NULL);
-    LineTo(_hdc, x2, y2);
-}
 
-void ellipse(HDC _hdc, int x1, int y1, int x2, int y2, HPEN kolor)//This function draws line by the given four coordinates.
-{
-    SelectObject(_hdc, kolor);
-    //MoveToEx(_hdc, x1, y1, NULL);
-    Ellipse(_hdc, x1, y1, x2, y2);
-}
-
-void rectangle(HDC _hdc, int x1, int y1, int x2, int y2, HPEN kolor)//This function draws line by the given four coordinates.
-{
-    SelectObject(_hdc, kolor);
-    //MoveToEx(_hdc, x1, y1, NULL);
-    Rectangle(_hdc, x1, y1, x2, y2);
-}
 /*  This function is called by the Windows function DispatchMessage()  */
 
 /*void rysuj(HWND hwnd)
