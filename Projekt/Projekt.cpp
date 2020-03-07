@@ -14,6 +14,7 @@
 // #include "menu.rc"
 
 
+// zmienne
 
 #define IDPRZYCISKU1 505
 
