@@ -13,9 +13,6 @@
 //#include "resource.h"
 // #include "menu.rc"
 
-
-// zmienne
-
 #define IDPRZYCISKU1 505
 
 
@@ -23,11 +20,8 @@
 void AddMenus(HWND);
 
 #define IDM_FILE_NEW 1
-
 #define IDM_FILE_OPEN 2
-
 #define IDM_FILE_QUIT 3
-
 
 /* zmienne */
 
