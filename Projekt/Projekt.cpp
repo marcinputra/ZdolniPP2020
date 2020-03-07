@@ -391,7 +391,7 @@ void rectangle(HDC _hdc, int x1, int y1, int x2, int y2, HPEN kolor)//This funct
     /*    EndPaint(hwnd, &ps);
     }*/
 
-int tool = 1;
+int tool = 0;
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 {
@@ -409,14 +409,28 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
         //if (wParam & MK_LBUTTON)			//If Left mouse button is down then draw
         //{
             //line(hdc, lastx, lasty, x, y, kolorpisaka);		//Draw the line frome the last pair of coordiates to current
-        if (tool == 0) rectangle(hdc, lastx, lasty, x, y, kolorpisaka);
-        if (tool == 1) line(hdc, lastx, lasty, x, y, kolorpisaka);
+        if (tool == 1) rectangle(hdc, lastx, lasty, x, y, kolorpisaka);
+        if (tool == 2) line(hdc, lastx, lasty, x, y, kolorpisaka);
         //lastx = x;						//The current x becomes the lastx for next line to be drawn
         //lasty = y;						//The current y becomes the lasty for next line to be drawn
     //}
         ReleaseDC(hwnd, hdc);
         return 0;
-
+    case WM_MOUSEMOVE:						//When mouse is moved on the client area (or form for VB users)
+        hdc = GetDC(hwnd);					//hdc is handle to device context
+        x = LOWORD(lParam);					//Store the current x 
+        y = HIWORD(lParam);					//Store the current y
+        if (wParam & MK_LBUTTON)			//If Left mouse button is down then draw
+        {
+            if (tool == 0)
+            {
+                line(hdc, lastx, lasty, x, y, kolorpisaka);		//Draw the line frome the last pair of coordiates to current
+                lastx = x;						//The current x becomes the lastx for next line to be drawn
+                lasty = y;						//The current y becomes the lasty for next line to be drawn
+            }
+            ReleaseDC(hwnd, hdc);
+            return 0;
+        }
         /////////////////
     case WM_KEYDOWN:
         if (wParam == VK_RETURN)
@@ -463,14 +477,14 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
         }
         if (HWND(lParam) == prostokat && HIWORD(wParam) == BN_CLICKED)
         {
-            tool = 0;
+            tool = 1;
             //MessageBox(NULL, _T("result"), _T("b1"), NULL);
             //kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0xAA0000);
             //SelectObject(hdc, kolorpisaka);
         }
         if (HWND(lParam) == linia && HIWORD(wParam) == BN_CLICKED)
         {
-            tool = 1;
+            tool = 2;
             //kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0xAA0000);
             //SelectObject(hdc, kolorpisaka);
         }
