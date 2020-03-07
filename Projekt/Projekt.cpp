@@ -1,180 +1,495 @@
-﻿// Projekt.cpp : Definiuje punkt wejścia dla aplikacji.
-//
+﻿#if defined(UNICODE) && !defined(_UNICODE)
 
-#include "framework.h"
-#include "Projekt.h"
+#define _UNICODE
 
-#define MAX_LOADSTRING 100
+#elif defined(_UNICODE) && !defined(UNICODE)
 
-// Zmienne globalne:
-HINSTANCE hInst;                                // bieżące wystąpienie
-WCHAR szTitle[MAX_LOADSTRING];                  // Tekst paska tytułu
-WCHAR szWindowClass[MAX_LOADSTRING];            // nazwa klasy okna głównego
+#define UNICODE
 
-// Przekaż dalej deklaracje funkcji dołączone w tym module kodu:
-ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+#endif
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+
+
+#include <tchar.h>
+
+#include <string>
+
+#include <windows.h>
+
+//#include "resource.h"
+// #include "menu.rc"
+
+
+
+#define IDPRZYCISKU1 505
+
+
+
+void AddMenus(HWND);
+
+#define IDM_FILE_NEW 1
+
+#define IDM_FILE_OPEN 2
+
+#define IDM_FILE_QUIT 3
+
+
+/* zmienne */
+
+
+// int a = 150, b = 150;
+
+/*  Declare Windows procedure  */
+
+LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
+
+
+
+/*  Make the class name into a global variable  */
+
+TCHAR szClassName[] = _T("CodeBlocksWindowsApp");
+
+
+
+HWND czarny, czerwony, zielony, niebieski, prostokat, linia; /* dodawanie kontroliki uchwytu dla przycisku */
+
+HWND hText;
+
+HDC hdc;
+
+LPSTR bufor;
+
+DWORD size;
+
+HPEN kolorpisaka;
+
+int x, y, lastx, lasty;
+
+int WINAPI WinMain(HINSTANCE hThisInstance,
+
+    HINSTANCE hPrevInstance,
+
+    LPSTR lpszArgument,
+
+    int nCmdShow)
+
 {
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: W tym miejscu umieść kod.
+    HWND hwnd;        /* This is the handle for our window */
 
-    // Inicjuj ciągi globalne
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_PROJEKT, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
+    MSG messages;     /* Here messages to the application are saved */
 
-    // Wykonaj inicjowanie aplikacji:
-    if (!InitInstance (hInstance, nCmdShow))
+    WNDCLASSEX wincl; /* Data structure for the windowclass */
+
+
+
+    /* dodawanie menu programu */
+
+    /* HMENU hMenu = LoadMenu(HINSTANCE hInstance, MAKEINTRESOURCE(200)); */
+
+
+
+    /* The Window structure */
+
+    wincl.hInstance = hThisInstance;
+
+    wincl.lpszClassName = szClassName;
+
+    wincl.lpfnWndProc = WindowProcedure; /* This function is called by windows */
+
+    wincl.style = CS_DBLCLKS;            /* Catch double-clicks */
+
+    wincl.cbSize = sizeof(WNDCLASSEX);
+
+
+
+    /* Use default icon and mouse-pointer */
+
+    wincl.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+
+    wincl.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+
+    wincl.hCursor = LoadCursor(NULL, IDC_ARROW);
+
+    wincl.lpszMenuName = NULL; /* No menu */
+
+    wincl.cbClsExtra = 0;      /* No extra bytes after the window class */
+
+    wincl.cbWndExtra = 0;      /* structure or the window instance */
+
+    /* Use Windows's default colour as the background of the window */
+
+    wincl.hbrBackground = (HBRUSH)0;
+
+
+
+
+    /* Register the window class, and if it fails quit the program */
+
+    if (!RegisterClassEx(&wincl))
+
+        return 0;
+
+
+
+    /* The class is registered, let's create the program*/
+
+    hwnd = CreateWindowEx(
+
+        0,                                  /* Extended possibilites for variation */
+
+        szClassName,                        /* Classname */
+
+        _T("Pierwsza aplikacja okienkowa"), /* Title Text */
+
+        WS_OVERLAPPEDWINDOW,                /* default window */
+
+        CW_USEDEFAULT,                      /* Windows decides the position */
+
+        CW_USEDEFAULT,                      /* where the window ends up on the screen */
+
+        544,                                /* The programs width */
+
+        375,                                /* and height in pixels */
+
+        HWND_DESKTOP,                       /* The window is a child-window to desktop */
+
+        NULL,                               /* No menu */
+
+        hThisInstance,                      /* Program Instance handler */
+
+        NULL                                /* No Window Creation data */
+
+    );
+
+
+
+    /* dodawanie przycisku */
+
+    czarny = CreateWindowEx(
+
+        0,
+
+        _T("BUTTON"),
+
+        _T("BLACK"),
+
+        BS_BOTTOM | WS_CHILD | WS_VISIBLE,
+
+        10, 10, 80, 20,
+
+        hwnd,
+
+        NULL,
+
+        hThisInstance,
+
+        NULL);
+
+
+
+    czerwony = CreateWindowEx(
+
+        0,
+
+        _T("BUTTON"),
+
+        _T("RED"),
+
+        WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+
+        100, 10, 80, 20,
+
+        hwnd,
+
+        NULL,
+
+        hThisInstance,
+
+        NULL);
+
+    zielony = CreateWindowEx(
+
+        0,
+
+        _T("BUTTON"),
+
+        _T("GREEN"),
+
+        WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+
+        190, 10, 80, 20,
+
+        hwnd,
+
+        NULL,
+
+        hThisInstance,
+
+        NULL);
+    niebieski = CreateWindowEx(
+
+        0,
+
+        _T("BUTTON"),
+
+        _T("BLUE"),
+
+        WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+
+        280, 10, 80, 20,
+
+        hwnd,
+
+        NULL,
+
+        hThisInstance,
+
+        NULL);
+    prostokat = CreateWindowEx(
+
+        0,
+
+        _T("BUTTON"),
+
+        _T("PROSTOKAT"),
+
+        WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+
+        370, 10, 80, 20,
+
+        hwnd,
+
+        NULL,
+
+        hThisInstance,
+
+        NULL);
+    linia = CreateWindowEx(
+
+        0,
+
+        _T("BUTTON"),
+
+        _T("LINIA"),
+
+        WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+
+        460, 10, 80, 20,
+
+        hwnd,
+
+        NULL,
+
+        hThisInstance,
+
+        NULL);
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    /*OBECNY PROGRESS!!!!!!*/
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //od tad
+    //HANDLE czaIkona = LoadImage(hThisInstance, MAKEINTRESOURCE(IDR_BUTTON), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+    //SendMessage(czarny, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)czaIkona);
+    //do tad nie dziala
+
+    /*hText = CreateWindowEx(
+
+        0,
+
+        _T("EDIT"),
+
+        NULL,
+
+        WS_CHILD | WS_VISIBLE | WS_BORDER,
+
+        50, 20, 150, 25,
+
+        hwnd,
+
+        NULL,
+
+        hThisInstance,
+
+        NULL);*/
+
+        /* Make the window visible on the screen */
+
+    ShowWindow(hwnd, nCmdShow);
+
+    /* Run the message loop. It will run until GetMessage() returns 0 */
+
+    while (GetMessage(&messages, NULL, 0, 0))
+
     {
-        return FALSE;
+
+        /* Translate virtual-key messages into character messages */
+
+        TranslateMessage(&messages);
+
+        /* Send message to WindowProcedure */
+
+        DispatchMessage(&messages);
+
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_PROJEKT));
 
-    MSG msg;
 
-    // Główna pętla komunikatów:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    /* The program return-value is 0 - The value that PostQuitMessage() gave */
+
+    return messages.wParam;
+
+}
+
+void line(HDC _hdc, int x1, int y1, int x2, int y2, HPEN kolor)//This function draws line by the given four coordinates.
+{
+    SelectObject(_hdc, kolor);
+    MoveToEx(_hdc, x1, y1, NULL);
+    LineTo(_hdc, x2, y2);
+}
+
+void ellipse(HDC _hdc, int x1, int y1, int x2, int y2, HPEN kolor)//This function draws line by the given four coordinates.
+{
+    SelectObject(_hdc, kolor);
+    //MoveToEx(_hdc, x1, y1, NULL);
+    Ellipse(_hdc, x1, y1, x2, y2);
+}
+
+void rectangle(HDC _hdc, int x1, int y1, int x2, int y2, HPEN kolor)//This function draws line by the given four coordinates.
+{
+    SelectObject(_hdc, kolor);
+    //MoveToEx(_hdc, x1, y1, NULL);
+    Rectangle(_hdc, x1, y1, x2, y2);
+}
+/*  This function is called by the Windows function DispatchMessage()  */
+
+/*void rysuj(HWND hwnd)
+{
+    HDC hdc;
+    PAINTSTRUCT ps;
+    HPEN kolorpisaka, apka, czarnykolor;
+    hdc = BeginPaint(hwnd, &ps);
+
+    kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0x11AAFF);
+    SelectObject(hdc, kolorpisaka);
+
+    MoveToEx(hdc, 50, 50, NULL);
+    for (int i = 0; i < 50; i++)
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
+        LineTo(hdc, i + 50, i * i / 80 + 50);
     }
+    czarnykolor = CreatePen(PS_DASHDOT, 8, 0xDD3300);
+    SelectObject(hdc, czarnykolor);
+    MoveToEx(hdc, 50, 50, NULL);
 
-    return (int) msg.wParam;
-}
+    LineTo(hdc, 50, 100);
+    LineTo(hdc, 100, 100);
+    LineTo(hdc, 50, 50);
 
+    MoveToEx(hdc, 150, 150, NULL);
+    SelectObject(hdc, kolorpisaka);
+    Ellipse(hdc, 250, 100, 20, 20);
+    ////////////////////////////////////////////////*/
+    /*HDC hdc;
+    PAINTSTRUCT ps;
+    hdc = BeginPaint(hwnd, &ps);
+    */
+    /*    EndPaint(hwnd, &ps);
+    }*/
 
+int tool = -1;
+LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
-//
-//  FUNKCJA: MyRegisterClass()
-//
-//  PRZEZNACZENIE: Rejestruje klasę okna.
-//
-ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    WNDCLASSEXW wcex;
+    bool spr;
+    switch (message) /* handle the messages */
+    {      //////////////////////
+    case WM_LBUTTONDOWN:					//If Left mouse button is pressed
+        lastx = LOWORD(lParam);			//Store the x-coordiante in lastx
+        lasty = HIWORD(lParam);			//Store the y-coordinate in lasty
+        return 0;
+    case WM_LBUTTONUP:						//When mouse is moved on the client area (or form for VB users)
+        hdc = GetDC(hwnd);					//hdc is handle to device context
+        x = LOWORD(lParam);					//Store the current x 
+        y = HIWORD(lParam);					//Store the current y
+        //if (wParam & MK_LBUTTON)			//If Left mouse button is down then draw
+        //{
+            //line(hdc, lastx, lasty, x, y, kolorpisaka);		//Draw the line frome the last pair of coordiates to current
+        if (tool == 0) rectangle(hdc, lastx, lasty, x, y, kolorpisaka);
+        if (tool == 1) line(hdc, lastx, lasty, x, y, kolorpisaka);
+        //lastx = x;						//The current x becomes the lastx for next line to be drawn
+        //lasty = y;						//The current y becomes the lasty for next line to be drawn
+    //}
+        ReleaseDC(hwnd, hdc);
+        return 0;
 
-    wcex.cbSize = sizeof(WNDCLASSEX);
-
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_PROJEKT));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_PROJEKT);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-
-    return RegisterClassExW(&wcex);
-}
-
-//
-//   FUNKCJA: InitInstance(HINSTANCE, int)
-//
-//   PRZEZNACZENIE: Zapisuje dojście wystąpienia i tworzy okno główne
-//
-//   KOMENTARZE:
-//
-//        W tej funkcji dojście wystąpienia jest zapisywane w zmiennej globalnej i
-//        jest tworzone i wyświetlane okno główne programu.
-//
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-{
-   hInst = hInstance; // Przechowuj dojście wystąpienia w naszej zmiennej globalnej
-
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-
-   if (!hWnd)
-   {
-      return FALSE;
-   }
-
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
-
-   return TRUE;
-}
-
-//
-//  FUNKCJA: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  PRZEZNACZENIE: Przetwarza komunikaty dla okna głównego.
-//
-//  WM_COMMAND  - przetwarzaj menu aplikacji
-//  WM_PAINT    - Maluj okno główne
-//  WM_DESTROY  - opublikuj komunikat o wyjściu i wróć
-//
-//
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message)
-    {
-    case WM_COMMAND:
+        /////////////////
+    case WM_KEYDOWN:
+        if (wParam == VK_RETURN)
         {
-            int wmId = LOWORD(wParam);
-            // Analizuj zaznaczenia menu:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
+            MessageBox(NULL, __T("TEXT"), __T("Drugi?"), MB_OK);
+            break;
         }
-        break;
-    case WM_PAINT:
+        /*if (wParam == VK_F10)
         {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Tutaj dodaj kod rysujący używający elementu hdc...
-            EndPaint(hWnd, &ps);
-        }
+
+            rysuj(hwnd);
+        }*/
         break;
+        /*case WM_PAINT:
+
+
+
+            break;*/
     case WM_DESTROY:
-        PostQuitMessage(0);
+        PostQuitMessage(0); /* send a WM_QUIT to the message queue */
         break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    return 0;
-}
-
-// Procedura obsługi komunikatów dla okna informacji o programie.
-INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    UNREFERENCED_PARAMETER(lParam);
-    switch (message)
-    {
-    case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
-
     case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+        if (HWND(lParam) == czarny && HIWORD(wParam) == BN_CLICKED)
         {
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
+            kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0x000000);
+            //SelectObject(hdc, kolorpisaka);
+            //MessageBox(NULL, _T("result"), _T("b1"), NULL);
+
         }
-        break;
+        if (HWND(lParam) == czerwony && HIWORD(wParam) == BN_CLICKED)
+        {
+            kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0x0000AA);
+            //SelectObject(hdc, kolorpisaka);
+        }
+        if (HWND(lParam) == zielony && HIWORD(wParam) == BN_CLICKED)
+        {
+            kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0x00AA00);
+            //SelectObject(hdc, kolorpisaka);
+        }
+        if (HWND(lParam) == niebieski && HIWORD(wParam) == BN_CLICKED)
+        {
+            kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0xAA0000);
+            //SelectObject(hdc, kolorpisaka);
+        }
+        if (HWND(lParam) == prostokat && HIWORD(wParam) == BN_CLICKED)
+        {
+            tool = 0;
+            //MessageBox(NULL, _T("result"), _T("b1"), NULL);
+            //kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0xAA0000);
+            //SelectObject(hdc, kolorpisaka);
+        }
+        if (HWND(lParam) == linia && HIWORD(wParam) == BN_CLICKED)
+        {
+            tool = 1;
+            //kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0xAA0000);
+            //SelectObject(hdc, kolorpisaka);
+        }
+        ////
+
+
+    default: /* for messages that we don't deal with */
+
+        return DefWindowProc(hwnd, message, wParam, lParam);
+
     }
-    return (INT_PTR)FALSE;
+
+
+
+    return 0;
+
 }
