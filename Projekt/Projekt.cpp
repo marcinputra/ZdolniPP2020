@@ -7,7 +7,7 @@
 #define UNICODE
 
 #endif
-
+// nowy rok
 // projekt zdolni2020
 
 #include <tchar.h>
