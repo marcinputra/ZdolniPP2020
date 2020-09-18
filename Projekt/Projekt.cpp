@@ -9,6 +9,7 @@
 #endif
 // nowy rok
 // projekt zdolni2020
+//Tomasz
 
 #include <tchar.h>
 #include <string>
