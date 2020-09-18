@@ -128,7 +128,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
         return 0;
 
-
+    // WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU
 
     /* The class is registered, let's create the program*/
 
@@ -138,17 +138,17 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
         szClassName,                        /* Classname */
 
-        _T("Pierwsza aplikacja okienkowa"), /* Title Text */
+        _T("Drawboard"), /* Title Text */
 
-        WS_OVERLAPPEDWINDOW,                /* default window */
+        WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU,                /* default window */
 
         CW_USEDEFAULT,                      /* Windows decides the position */
 
         CW_USEDEFAULT,                      /* where the window ends up on the screen */
 
-        565,                                /* The programs width */
+        1280,                                /* The programs width */
 
-        375,                                /* and height in pixels */
+        800,                                /* and height in pixels */
 
         HWND_DESKTOP,                       /* The window is a child-window to desktop */
 
