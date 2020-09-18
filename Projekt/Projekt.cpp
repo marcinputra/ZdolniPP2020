@@ -7,8 +7,9 @@
 #define UNICODE
 
 #endif
-// komentarz2020
+// nowy rok
 // projekt zdolni2020
+//Tomasz
 
 #include <tchar.h>
 #include <string>
@@ -17,6 +18,7 @@
 //#include <rysowanie.h>
 //#include "resource.h"
 // #include "menu.rc"
+
 
 #define IDPRZYCISKU1 505
 
@@ -83,7 +85,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
     /* HMENU hMenu = LoadMenu(HINSTANCE hInstance, MAKEINTRESOURCE(200)); */
 
-
+    // TEST - Krystian
 
     /* The Window structure */
 
