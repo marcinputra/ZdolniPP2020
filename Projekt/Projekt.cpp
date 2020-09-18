@@ -7,7 +7,7 @@
 #define UNICODE
 
 #endif
-
+// komentarz2020
 // projekt zdolni2020
 
 #include <tchar.h>
