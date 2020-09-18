@@ -18,6 +18,7 @@
 //#include "resource.h"
 // #include "menu.rc"
 
+
 #define IDPRZYCISKU1 505
 
 
@@ -83,7 +84,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
     /* HMENU hMenu = LoadMenu(HINSTANCE hInstance, MAKEINTRESOURCE(200)); */
 
-
+    // TEST - Krystian
 
     /* The Window structure */
 
