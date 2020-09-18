@@ -506,8 +506,6 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
     }
 
-
-
     return 0;
 
 }
