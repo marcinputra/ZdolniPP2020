@@ -15,6 +15,8 @@
 #include <string>
 #include <windows.h>
 #include "Projekt.h"
+#include <vector>
+#include "DebugDataSave.h"
 //#include <rysowanie.h>
 //#include "resource.h"
 // #include "menu.rc"
@@ -62,6 +64,8 @@ HPEN kolorpisaka;
 HWND czarny, czerwony, zielony, niebieski, prostokat, linia, krzywa;
 
 int x, y, lastx, lasty;
+
+
 
 int WINAPI WinMain(HINSTANCE hThisInstance,
 
@@ -413,8 +417,26 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
         //if (wParam & MK_LBUTTON)			//If Left mouse button is down then draw
         //{
             //line(hdc, lastx, lasty, x, y, kolorpisaka);		//Draw the line frome the last pair of coordiates to current
-        if (tool == 1) rectangle(hdc, lastx, lasty, x, y, kolorpisaka);
-        if (tool == 2) line(hdc, lastx, lasty, x, y, kolorpisaka);
+        if (tool == 1)
+        {
+            rectangle(hdc, lastx, lasty, x, y, kolorpisaka);
+            data_from_last_sec.push_back(1);
+            data_from_last_sec.push_back(lastx);
+            data_from_last_sec.push_back(lasty);
+            data_from_last_sec.push_back(x);
+            data_from_last_sec.push_back(y);
+            DebugDataSave(&seconds_since_last_data_save, &data_from_last_sec);
+        }
+        if (tool == 2)
+        {
+            line(hdc, lastx, lasty, x, y, kolorpisaka);
+            data_from_last_sec.push_back(2);
+            data_from_last_sec.push_back(lastx);
+            data_from_last_sec.push_back(lasty);
+            data_from_last_sec.push_back(x);
+            data_from_last_sec.push_back(y);
+            DebugDataSave(&seconds_since_last_data_save, &data_from_last_sec);
+        }
         //lastx = x;						//The current x becomes the lastx for next line to be drawn
         //lasty = y;						//The current y becomes the lasty for next line to be drawn
     //}
@@ -431,6 +453,12 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                 line(hdc, lastx, lasty, x, y, kolorpisaka);		//Draw the line frome the last pair of coordiates to current
                 lastx = x;						//The current x becomes the lastx for next line to be drawn
                 lasty = y;						//The current y becomes the lasty for next line to be drawn
+                data_from_last_sec.push_back(0);
+                data_from_last_sec.push_back(lastx);
+                data_from_last_sec.push_back(lasty);
+                data_from_last_sec.push_back(x);
+                data_from_last_sec.push_back(y);
+                DebugDataSave(&seconds_since_last_data_save, &data_from_last_sec);
             }
             ReleaseDC(hwnd, hdc);
             return 0;

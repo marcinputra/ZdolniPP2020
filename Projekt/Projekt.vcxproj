@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="DebugDataSave.h" />
     <ClInclude Include="Projekt.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
