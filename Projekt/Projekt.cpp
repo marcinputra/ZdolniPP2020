@@ -135,7 +135,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
     // WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU
 
     /* The class is registered, let's create the program*/
-
+	HMENU hMenu = LoadMenu(hThisInstance, MAKEINTRESOURCE(IDC_PROJEKT));
     hwnd = CreateWindowEx(
 
         0,                                  /* Extended possibilites for variation */
@@ -156,7 +156,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
         HWND_DESKTOP,                       /* The window is a child-window to desktop */
 
-        NULL,                               /* No menu */
+        hMenu,                               /* Menu */
 
         hThisInstance,                      /* Program Instance handler */
 
@@ -485,7 +485,10 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
         PostQuitMessage(0); /* send a WM_QUIT to the message queue */
         break;
     case WM_COMMAND:
-        if (HWND(lParam) == czarny && HIWORD(wParam) == BN_CLICKED)
+		if (LOWORD(wParam) == IDM_EXIT)	PostQuitMessage(0);
+		if (LOWORD(wParam) == ID_WIDOK_ROZMIAROKNA) { }
+		if (LOWORD(wParam) == IDM_ABOUT)	MessageBox(hwnd, _T("Q: Co to jest?\nA: Bardzo Fajny Program do rysowania śmiesznych kształtów.\n\nQ: Kto to zrobił?\nA: Team Zdolnych z Pomorza 2020/21.\n\nQ: Nie działa!!!11\nA: Proszę złożyć zażalenie do skrzynki na zażalenia.\n\nQ: Kto pisze to FAQ a powinien już spać?\nA: koniec pytań"), _T("FAQ"), MB_ICONINFORMATION);
+		if (HWND(lParam) == czarny && HIWORD(wParam) == BN_CLICKED)
         {
             kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0x000000);
             //SelectObject(hdc, kolorpisaka);
