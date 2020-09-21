@@ -12,7 +12,7 @@
 std::vector <int> data_from_last_sec;
 /*
 contains coordinates data from last minute as ints, in pattern
-[tool: 0 - free painting x1 y1 x2 y2 1 - rectangle x1 y1 x2 y2, 2 - line x1 y1 x2 y2]
+[tool: 0 - free painting x1 y1 x2 y2 colour(black, red, green, blue) 1 - rectangle x1 y1 x2 y2 colour(black, red, green, blue) 2 - line x1 y1 x2 y2 colour(black, red, green, blue)
 */
 double seconds_since_last_data_save = time(NULL);
 
@@ -58,7 +58,7 @@ void DebugDataSave(double* last_save, std::vector <int> *data)
 			save_file << data->at(i) << " ";
 			for (int j = 1; temp > i + j; j++)
 			{
-				if (j == 4)
+				if (j == 5)
 				{
 					save_file << data->at(i + j) << "   ";
 					i += j;

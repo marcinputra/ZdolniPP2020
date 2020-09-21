@@ -66,6 +66,9 @@ HWND czarny, czerwony, zielony, niebieski, prostokat, linia, krzywa;
 int x, y, lastx, lasty;
 
 
+///for web and debuging purposes
+int colour = 0;
+///0 - black, 1 - red, 2 - green, 3 - blue
 
 int WINAPI WinMain(HINSTANCE hThisInstance,
 
@@ -425,6 +428,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             data_from_last_sec.push_back(lasty);
             data_from_last_sec.push_back(x);
             data_from_last_sec.push_back(y);
+            data_from_last_sec.push_back(colour);
             DebugDataSave(&seconds_since_last_data_save, &data_from_last_sec);
         }
         if (tool == 2)
@@ -435,6 +439,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             data_from_last_sec.push_back(lasty);
             data_from_last_sec.push_back(x);
             data_from_last_sec.push_back(y);
+            data_from_last_sec.push_back(colour);
             DebugDataSave(&seconds_since_last_data_save, &data_from_last_sec);
         }
         //lastx = x;						//The current x becomes the lastx for next line to be drawn
@@ -458,6 +463,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                 data_from_last_sec.push_back(lasty);
                 data_from_last_sec.push_back(x);
                 data_from_last_sec.push_back(y);
+                data_from_last_sec.push_back(colour);
                 DebugDataSave(&seconds_since_last_data_save, &data_from_last_sec);
             }
             ReleaseDC(hwnd, hdc);
@@ -491,6 +497,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		if (HWND(lParam) == czarny && HIWORD(wParam) == BN_CLICKED)
         {
             kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0x000000);
+            colour = 0;
             //SelectObject(hdc, kolorpisaka);
             //MessageBox(NULL, _T("result"), _T("b1"), NULL);
 
@@ -498,15 +505,18 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
         if (HWND(lParam) == czerwony && HIWORD(wParam) == BN_CLICKED)
         {
             kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0x0000AA);
+            colour = 1;
             //SelectObject(hdc, kolorpisaka);
         }
         if (HWND(lParam) == zielony && HIWORD(wParam) == BN_CLICKED)
         {
+            colour = 2;
             kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0x00AA00);
             //SelectObject(hdc, kolorpisaka);
         }
         if (HWND(lParam) == niebieski && HIWORD(wParam) == BN_CLICKED)
         {
+            colour = 3;
             kolorpisaka = CreatePen(PS_DASHDOTDOT, 2, 0xAA0000);
             //SelectObject(hdc, kolorpisaka);
         }
