@@ -4,6 +4,7 @@
 
 #pragma comment(lib, "Ws2_32.lib")
 #define APP_PORT "21370"
+#define BUFLEN 512
 
 using namespace std;
 
@@ -30,7 +31,7 @@ int main()
 	}
 	ptr = result;
 	SOCKET ListenSocket = INVALID_SOCKET;
-	ListenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 	if (ListenSocket == INVALID_SOCKET)
 	{
 		cerr << "Blad tworzenia socketa" << endl;
@@ -38,6 +39,43 @@ int main()
 		return 1;
 	}
 	// Bind
-	
+	int bindResult;
+	bindResult = bind(ListenSocket, result->ai_addr, (int)(result->ai_addrlen));
+	if (bindResult == SOCKET_ERROR)
+	{
+		cerr << "Blad bindowania adresu ip" << endl;
+		closesocket(ListenSocket);
+		WSACleanup();
+		return 1;
+	}
+	// Put socket on listen mode
+	if (listen(ListenSocket, SOMAXCONN) == SOCKET_ERROR)
+	{
+		closesocket(ListenSocket);
+		WSACleanup();
+		return 1;
+	}
+
+	cout << "Oczekiwanie na polaczenie..." << endl;
+	SOCKET ClientSocket;
+	ClientSocket = accept(ListenSocket, nullptr, nullptr);
+	if (ClientSocket == INVALID_SOCKET)
+	{
+		closesocket(ListenSocket);
+		WSACleanup();
+		cerr << "Blad podczas laczenia." << endl;
+		return 1;
+	}
+
+	// Odbieranie danych od klienta
+	char recvbuf[BUFLEN];
+	do {
+		int bytesRecieved = recv(ClientSocket, recvbuf, BUFLEN, 0);
+		if (bytesRecieved > 0)
+		{
+			cout << "Otrzymano wiadomosc:" << endl;
+			cout << recvbuf << endl;
+		}
+	} while (true);
 	return 0;
 }
