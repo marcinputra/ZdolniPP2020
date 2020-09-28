@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Projekt.cpp" />
+    <ClCompile Include="socketserver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Projekt.rc" />
