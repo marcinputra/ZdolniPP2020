@@ -64,8 +64,9 @@ HPEN kolorpisaka;
 HWND czarny, czerwony, zielony, niebieski, prostokat, linia, krzywa;
 
 int x, y, lastx, lasty;
-
-
+//
+double seconds_since_last_data_save = time(NULL);
+std::vector <int> data_from_last_sec;
 ///for web and debuging purposes
 int colour = 0;
 ///0 - black, 1 - red, 2 - green, 3 - blue

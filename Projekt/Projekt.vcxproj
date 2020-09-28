@@ -154,6 +154,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DebugDataSave.cpp" />
     <ClCompile Include="Projekt.cpp" />
   </ItemGroup>
   <ItemGroup>
