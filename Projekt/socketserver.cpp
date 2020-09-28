@@ -3,12 +3,12 @@
 #include <ws2tcpip.h>
 
 #pragma comment(lib, "Ws2_32.lib")
-#define APP_PORT "21370"
+#define APP_PORT "27015"
 #define BUFLEN 512
 
 using namespace std;
 
-int main()
+int sockmain()
 {
 	WSADATA wsaData;
 	int wsResult;
@@ -22,10 +22,11 @@ int main()
 	// Create socket
 	// Get ip
 	struct addrinfo* result = NULL, * ptr = NULL, hints;
-	int addrResult = getaddrinfo(NULL, APP_PORT, &hints, &result);
+	memset(&hints, 0, sizeof(hints));
+	int addrResult = getaddrinfo("127.0.0.1", APP_PORT, &hints, &result);
 	if (addrResult != 0)
 	{
-		cerr << "Nie mozna uzyskac adresu ip" << endl;
+		cerr << "Nie mozna uzyskac adresu ip kod: " << addrResult << endl;
 		WSACleanup();
 		return addrResult;
 	}
