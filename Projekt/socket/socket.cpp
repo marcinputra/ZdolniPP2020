@@ -1,4 +1,77 @@
-﻿#undef UNICODE
+#include <iostream>
+// biblioteki pozwalające na przepływ informacji
+#include <WS2tcpip.h>
+
+#pragma comment (lib, "ws2_32.lib")
+// Komentarz #pragma wskazuje konsolidatorowi, że potrzebny jest plik Ws2_32.lib
+
+using namespace std;
+
+void main() 
+{
+
+	// inicjowanie winsock
+	WSADATA wsaData;
+	WORD ver = MAKEWORD(2, 2);
+	/*
+		Parametr MAKEWORD (2,2) WSAStartup 
+		wysyła żądanie wersji 2.2 Winsock 
+		w systemie i ustawia przekazaną wersję
+		jako najwyższą wersję obsługi gniazd 
+		Windows, z której może korzystać 
+		wywołujący.
+	*/
+	int wsOK = WSAStartup(ver, &wsaData);
+	/*
+		Funkcja WSAStartup jest wywoływana 
+		w celu zainicjowania użycia WS2_32.dll
+	*/
+	if (wsOK != 0) {
+		cout << "Nie moge zainicjowac winsock! Koniec\n";
+		return; // koniec programu
+	}
+
+	// utworzenie socketu (gniazda)
+	SOCKET listenSocket = socket(AF_INET, SOCK_STREAM, 0);
+
+	// sprawdzenie gniazda czy jest prawidłowe
+	if (listenSocket == INVALID_SOCKET) {
+		cout << "Bload gniazda (socket)\n";
+		return;
+	}
+	// powiązanie (bind) gniazda z adresem IP i portem
+	sockaddr_in gHadd;
+	gHadd.sin_family = AF_INET;
+	gHadd.sin_port = htons(54000); // Funkcja htons konwertuje u_short z hosta na kolejność bajtów sieci TCP / IP (czyli big-endian)
+	gHadd.sin_addr.S_un.S_addr = INADDR_ANY; // mozliwe jest przez uzycie inet_pton
+	
+	bind(listenSocket, (sockaddr*)&gHadd, sizeof(gHadd));
+
+	// nasłuchiwać na tym adresie IP i porcie pod kątem przychodzących żądań połączenia
+	listen(listenSocket, SOMAXCONN); // Funkcja nasłuchiwania umieszcza gniazdo w stanie, w którym nasłuchuje połączenia przychodzącego.
+
+	// czekanie na połączenie (akceptacja połączenie w gnieździe)
+	sockaddr_in client;	// Struktura SOCKADDR_IN określa adres transportowy i port dla rodziny adresów AF_INET .
+	int  clientSize = sizeof(client);
+	SOCKET clientSocket = accept(listenSocket,(sockaddr*)&)
+
+
+
+
+	// odbiernie i wysylanie danych na serwer
+	// funkcje recv i send używane przez serwer
+
+	// Gdy serwer zakończy odbieranie danych od klienta i wysyłanie danych z powrotem do klienta, odłącza się od klienta i zamyka gniazdo.
+
+	// zamknięcie socketu (gniazda)
+
+	// zamknięcie winsock
+
+
+
+}
+-------------------------------
+#undef UNICODE
 
 #define WIN32_LEAN_AND_MEAN
 
