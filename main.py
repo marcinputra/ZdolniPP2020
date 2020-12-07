@@ -32,7 +32,7 @@ if __name__ == "__main__":
             #  mpos = event.pos
             #  mbutton = event.button
             #  pygame.draw.circle(surface)
-        if pygame.mouse.get_pressed()[0] == True:
+        ###if pygame.mouse.get_pressed()[0] == True:
             # Wcisniety jest lewy przycisk myszy
             
             mpos = pygame.mouse.get_pos() # Tuple (x, y)
