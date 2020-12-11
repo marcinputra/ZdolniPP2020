@@ -1,14 +1,22 @@
 import sys, pygame
+import math
 width = 1000
 height = 400
 
-def interpPixels(lastpos,currpos):
-    # Rysowanie kolek miedzy dwoma punktami
+def interpPixels(surface,lastpos,currpos):
+    # Uzupelnianie kolek miedzy dwoma punktami
     xdiff = lastpos[0] - currpos[0]
     ydiff = lastpos[1] - currpos[1]
-    for i in range(0,max(xdiff,ydiff)):
-        pass
-
+    highnum = max(abs(xdiff),abs(ydiff))
+    if highnum == abs(xdiff):
+        high = xdiff
+        low = ydiff
+    else:
+        high = ydiff
+        low = xdiff
+    for i in range(0,highnum):
+        
+        pygame.draw.circle(surface=surface, color=(0,0,0), center=(xpos,ypos), radius=1, width=1)
 
 
 if __name__ == "__main__":
@@ -21,23 +29,22 @@ if __name__ == "__main__":
     pygame.display.flip()
 
     lastpos=(0,0)
-
+    mouseDown = False
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit(0)
-            # Mouse events
-            #if event.type == pygame.MOUSEBUTTONDOWN:
-            #  mpos = event.pos
-            #  mbutton = event.button
-            #  pygame.draw.circle(surface)
-        ###if pygame.mouse.get_pressed()[0] == True:
-            # Wcisniety jest lewy przycisk myszy
-            
-            mpos = pygame.mouse.get_pos() # Tuple (x, y)
-            pygame.draw.circle(surface=mainSurface, color=(0,0,0), center=mpos, radius=1, width=1)
-            if lastpos != mpos:
-                #interpPixels(lastpos,mpos)
-            lastpos = mpos
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouseDown = True
+            elif event.type == pygame.MOUSEBUTTONUP:
+                mouseDown = False
+                lastpos = None
+
+            if mouseDown == True:
+                if event: mpos = event.pos
+                pygame.draw.circle(surface=mainSurface, color=(0,0,0), center=mpos, radius=1, width=1)
+                if lastpos is not None:
+                    interpPixels(mainSurface, lastpos,mpos)
+                lastpos = mpos
             pygame.display.update() # For debug only!
