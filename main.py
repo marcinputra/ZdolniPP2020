@@ -1,22 +1,33 @@
 import sys, pygame
 import math
-width = 1000
-height = 400
+import random
+dimensions = (1000,400)
+
+class vec2d:
+    def __init__(self, x=0,y=0):
+        self.x = x
+        self.y = y
+    def __sub__(self, other):
+        return vec2d(self.x - other.x, self.y - other.y) # Operator odejmowania
+    def __add__(self, other):
+        return vec2d(self.x - other.x, self.y - other.y) # Operator dodawania
+    def getMaxCoord(self, absolute=False):
+        if absolute == False:
+            return max(self.x,self.y)
+        else:
+            return max(abs(self.x),abs(self.y))
 
 def interpPixels(surface,lastpos,currpos):
     # Uzupelnianie kolek miedzy dwoma punktami
-    xdiff = lastpos[0] - currpos[0]
-    ydiff = lastpos[1] - currpos[1]
-    highnum = max(abs(xdiff),abs(ydiff))
-    if highnum == abs(xdiff):
-        high = xdiff
-        low = ydiff
-    else:
-        high = ydiff
-        low = xdiff
-    for i in range(0,highnum):
+    posdiff = lastpos - currpos
+    highnum = posdiff.getMaxCoord(absolute=True)
+    updatelist = []
+    for i in range(highnum):
+        x = int(currpos.x + (float(i)/highnum * posdiff.x))
+        y = int(currpos.y + (float(i)/highnum * posdiff.y))
         
-        pygame.draw.circle(surface=surface, color=(0,0,0), center=(xpos,ypos), radius=1, width=1)
+        updatelist.append(pygame.draw.circle(surface=surface, color=draw_color, center=(x,y), radius=1, width=1)) # Narysuj i dodaj do listy do odswiezenia
+    pygame.display.update(updatelist)
 
 
 if __name__ == "__main__":
@@ -24,11 +35,12 @@ if __name__ == "__main__":
     pygame.display.init()
     # Ustawienia okna
     pygame.display.set_caption("Rysowanie")
-    mainSurface = pygame.display.set_mode(size=(width,height), flags=pygame.RESIZABLE)
+    mainSurface = pygame.display.set_mode(size=dimensions)
     mainSurface.fill(color=(255,255,255))
     pygame.display.flip()
 
-    lastpos=(0,0)
+    draw_color=(0,0,0)
+    lastpos=None
     mouseDown = False
     while True:
         for event in pygame.event.get():
@@ -39,12 +51,22 @@ if __name__ == "__main__":
                 mouseDown = True
             elif event.type == pygame.MOUSEBUTTONUP:
                 mouseDown = False
-                lastpos = None
+                lastpos=None
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_e:
+                    print("press")
+                if event.key == pygame.K_f:
+                    random.seed()
+                    draw_color = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+                    print("zmiana koloru na {}".format(draw_color))
+                    
 
-            if mouseDown == True:
-                if event: mpos = event.pos
-                pygame.draw.circle(surface=mainSurface, color=(0,0,0), center=mpos, radius=1, width=1)
-                if lastpos is not None:
-                    interpPixels(mainSurface, lastpos,mpos)
-                lastpos = mpos
-            pygame.display.update() # For debug only!
+        if mouseDown == True and pygame.mouse.get_focused():
+            mpos = pygame.mouse.get_pos()
+            pygame.display.update(pygame.draw.circle(surface=mainSurface, color=draw_color, center=mpos, radius=1, width=1))
+            if lastpos is not None and lastpos != mpos:
+                interpPixels(mainSurface, vec2d(lastpos[0],lastpos[1]),vec2d(mpos[0],mpos[1]))
+            lastpos = mpos
+        if not pygame.mouse.get_focused(): lastpos = None # Resetuj ostatnia pozycje jezeli myszka wyjdzie po za okno
+
+            
